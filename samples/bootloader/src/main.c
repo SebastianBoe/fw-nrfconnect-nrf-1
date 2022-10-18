@@ -103,3 +103,24 @@ void main(void)
 	printk("No bootable image found. Aborting boot.\n\r");
 	return;
 }
+
+#include <bl_storage.h>
+#include <bl_storage_ext_api.h>
+
+#ifdef CONFIG_SB_IMPLEMENTATION_ID
+void implementation_id_value_read(uint8_t * ptr)
+{
+	memcpy(ptr, CONFIG_SB_IMPLEMENTATION_ID_VALUE, implementation_id_len());
+}
+
+size_t implementation_id_len(void)
+{
+	return strlen(CONFIG_SB_IMPLEMENTATION_ID_VALUE);
+}
+#endif /* CONFIG_SB_IMPLEMENTATION_ID */
+
+EXT_API(BL_STORAGE, struct bl_storage_ext_api, bl_storage_ext_api) = {
+		.implementation_id_value_read = implementation_id_value_read,
+		.implementation_id_len = implementation_id_len,
+	}
+};

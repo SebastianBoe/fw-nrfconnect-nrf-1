@@ -36,6 +36,29 @@ uint32_t s0_address_read(void);
 uint32_t s1_address_read(void);
 
 /**
+ * @brief Writes the "Implementation ID" Initial Attestation Token
+ * claim to ptr.
+ *
+ * Public data that uniquely identifies the NSIB
+ * implementation. Typically, this identifies the device manufacturer,
+ * the device model and version number, and any other data necessary
+ * to uniquely identify the device and the PSA Immutable PRoT.
+ *
+ * Configured with CONFIG_SB_IMPLEMENTATION_ID_VALUE.
+ *
+ * @note implementation_id_len() should be invoked to determine the
+ * buffer size of ptr.
+ */
+void implementation_id_value_read(uint8_t * ptr);
+
+/**
+ * @return Length of "Implementation ID" in bytes.
+ *
+ * @note See implementation_id_value_read().
+ */
+size_t implementation_id_len(void);
+
+/**
  * @brief Function for reading number of public key data slots.
  *
  * @return Number of public key data slots.

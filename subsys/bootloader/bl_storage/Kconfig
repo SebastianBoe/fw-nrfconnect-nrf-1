@@ -4,6 +4,27 @@
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
 #
 
-config SECURE_BOOT_STORAGE
-	bool "Functions for accessing the bootloader storage"
+menuconfig SECURE_BOOT_STORAGE
+	bool "Library for accessing the bootloader storage"
 	depends on SECURE_BOOT_CRYPTO
+
+if SECURE_BOOT_STORAGE
+
+menuconfig SB_IMPLEMENTATION_ID
+	bool "Uniquely identifies the underlying immutable PSA RoT."
+	# help "Public data that uniquely identifies the
+	# implementation. Typically, this identifies the device
+	# manufacturer, the device model and version number, and any other
+	# data necessary to uniquely identify the device and the Immutable
+	# PRoT"
+
+if SB_IMPLEMENTATION_ID
+config SB_IMPLEMENTATION_ID_VALUE
+	string "Value of the implementation ID claim."
+	default "Company X, Device Z, NSIB bootloader x.y.z"
+	# help "Value of the claim. Should be configured appropriately in production."
+
+# Dependency on EXT_API?
+
+endif # SB_IMPLEMENTATION_ID
+endif # SECURE_BOOT_STORAGE
