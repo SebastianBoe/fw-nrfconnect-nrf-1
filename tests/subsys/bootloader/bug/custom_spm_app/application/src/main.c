@@ -35,7 +35,7 @@ static K_TIMER_DEFINE(my_timer, my_timer_handler, NULL);
 
 void main(void){
     printk("Hello World! %s\n", CONFIG_BOARD);
-    k_timer_start(&my_timer, K_USEC(100), K_USEC(500));
+    k_timer_start(&my_timer, K_USEC(100), K_USEC(300));
     for (uint32_t idx = 0u; idx < 0xFFFFFF; idx++)
     {
       uint8_t store[8];
