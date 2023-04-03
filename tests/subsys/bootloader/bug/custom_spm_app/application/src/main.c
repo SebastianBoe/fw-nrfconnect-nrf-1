@@ -24,14 +24,18 @@ bool rcrOtpRead(uint8_t xField, uint8_t *xpDest, size_t *xpNumBytes)
 
   before_nse();
  // irqKey = irq_lock();
+  //  NRF_P0->OUTSET |= 1 << EGU1_PIN;
   retVal = rcrOtpRead_nse(xField, xpDest, xpNumBytes);
+  //  NRF_P0->OUTCLR |= 1 << EGU1_PIN;
   after_nse();
  // irq_unlock(irqKey);
   return retVal;
 }
 static void my_timer_handler(struct k_timer *dummy)
 {
-  printk("=");
+	//	NRF_P0->OUTSET |= 1 << EGU0_PIN;
+	printk("=");
+	//	NRF_P0->OUTCLR |= 1 << EGU0_PIN;
 }
 
 static K_TIMER_DEFINE(my_timer, my_timer_handler, NULL);
@@ -53,7 +57,7 @@ void trace_enable(void) {
 
 	NRF_P0->DIRSET |= 1 << EGU0_PIN;
 	NRF_P0->DIRSET |= 1 << EGU1_PIN;
-	//	NRF_P0->DIRSET |= 1 << 13;
+	NRF_P0->DIRSET |= 1 << 13;
 
 	NRF_P0->OUTSET |= 1 << EGU0_PIN;
 	for(volatile int i = 0; i < 1000; i++);
@@ -63,7 +67,7 @@ void trace_enable(void) {
 	for(volatile int i = 0; i < 1000; i++);
 	NRF_P0->OUTCLR |= 1 << EGU1_PIN;
 
-		__NOP(); __NOP(); __NOP(); __NOP();
+		/* __NOP(); __NOP(); __NOP(); __NOP(); */
 }
 
 void main(void){
