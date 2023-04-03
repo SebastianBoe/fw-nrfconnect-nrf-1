@@ -10,7 +10,7 @@ bool rcrOtpRead_nse(uint8_t xField, uint8_t *xpDest, size_t *xpNumBytes);
 bool rcrOtpRead(uint8_t xField, uint8_t *xpDest, size_t *xpNumBytes)
 {
   bool retVal = false;
-  unsigned int irqKey = 0u;
+  //  unsigned int irqKey = 0u;
 
   before_nse();
  // irqKey = irq_lock();
