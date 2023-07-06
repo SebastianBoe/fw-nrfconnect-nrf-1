@@ -59,7 +59,7 @@ manifest:
     # https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/guides/modules.html
     - name: zephyr
       repo-path: sdk-zephyr
-      revision: 1cdcadb94cee4f1e6a3dd7b34cc9cf276b245519
+      revision: pull/1244/head
       import:
         # In addition to the zephyr repository itself, NCS also
         # imports the contents of zephyr/west.yml at the above
@@ -110,7 +110,7 @@ manifest:
     - name: hostap
       repo-path: sdk-hostap
       path: modules/lib/hostap
-      revision: 341cb844d3f6c3027f2a45dfb942e30c21371321
+      revision: 6921e3c211b70e8a7be6f342533a078a9b7ee87d
       userdata:
         ncs:
           upstream-url: https://w1.fi/cgit/hostap/
