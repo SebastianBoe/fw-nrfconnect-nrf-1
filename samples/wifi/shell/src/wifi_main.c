@@ -36,6 +36,31 @@ int init_usb(void)
 }
 #endif
 
+struct demonstration {
+	int oh_no;
+};
+
+void test_func(int somevalue)
+{
+	printk("Am I executed? (1) \n");
+
+	printk("I was passed %d \n", somevalue);
+
+	printk("Am I executed? (2) \n");
+}
+
+void demo_crash(void)
+{
+	k_sleep(K_SECONDS(5));
+
+	printk("I am about to purposefully crash!\n");
+
+	struct demonstration *demo = NULL;
+
+	test_func(demo->oh_no);
+
+	printk("Am I executed? (3) \n");
+}
 
 int main(void)
 {
@@ -49,6 +74,8 @@ int main(void)
 			       NRF_CLOCK_HFCLK_DIV_1);
 #endif
 	printk("Starting %s with CPU frequency: %d MHz\n", CONFIG_BOARD, SystemCoreClock/MHZ(1));
+
+	demo_crash();
 
 #ifdef CONFIG_USB_DEVICE_STACK
 	init_usb();
