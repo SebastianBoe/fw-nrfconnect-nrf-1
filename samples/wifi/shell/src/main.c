@@ -53,6 +53,10 @@ int main(void)
 #endif
 	printk("Starting %s with CPU frequency: %d MHz\n", CONFIG_BOARD, SystemCoreClock/MHZ(1));
 
+	int * volatile i = 0;
+	int volatile j = *i;
+
+
 #ifdef CONFIG_USB_DEVICE_STACK
 	init_usb();
 
