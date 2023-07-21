@@ -1,0 +1,21 @@
+# Copyright (c) 2023 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+# The purpose of this file is to define new default values of settings
+# related to building nrf_security. This file only changes defaults
+# and thus all symbols here must be promptless and safeguarded so that
+# they only are applied when building nrf_security.
+
+if NRF_SECURITY
+
+config PSA_WANT_KEY_TYPE_AES
+	bool
+	default y if PSA_WANT_ALG_CCM
+	help
+	  The AES key type is the only supported key in nrf_security for
+	  these algorithms. This promptless option prevents
+	  misconfiguration and allows the user to do less configuration.
+
+endif # NRF_SECURITY

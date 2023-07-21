@@ -12,6 +12,7 @@ orsource "./$(BOARD_DIR)/Kconfig"
 
 rsource "boards/shields/*/Kconfig.shield"
 rsource "subsys/net/openthread/Kconfig.defconfig"
+rsource "subsys/nrf_security/Kconfig.defconfig"
 
 if !TFM_PROFILE_TYPE_MINIMAL
 rsource "modules/trusted-firmware-m/Kconfig.mbedtls.defconfig"
