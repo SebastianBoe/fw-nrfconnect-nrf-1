@@ -1,0 +1,51 @@
+# Copyright (c) 2022 Nordic Semiconductor ASA
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+
+CONFIG_SOC_SERIES_NRF54LX=y
+CONFIG_SOC_NRF54L15=y
+CONFIG_SOC_NRF54L15_CPUAPP=y
+CONFIG_BOARD_NRF54L15DK_NRF54L15_CPUAPP_NS=y
+
+# Enable MPU
+CONFIG_ARM_MPU=y
+
+# Enable hardware stack protection
+CONFIG_HW_STACK_PROTECTION=y
+
+# Enable TrustZone-M
+CONFIG_ARM_TRUSTZONE_M=y
+
+# This Board implies building Non-Secure firmware
+CONFIG_TRUSTED_EXECUTION_NONSECURE=y
+
+# Don't enable the cache in the non-secure image as it is a
+# secure-only peripheral on 54l
+CONFIG_CACHE_MANAGEMENT=n
+CONFIG_EXTERNAL_CACHE=n
+
+CONFIG_NRF_GRTC_TIMER=y
+CONFIG_SYSTEM_CLOCK_WAIT=y
+
+CONFIG_UART_CONSOLE=y
+CONFIG_CONSOLE=y
+CONFIG_SERIAL=y
+
+CONFIG_PINCTRL=y
+
+# Enable GPIO
+CONFIG_GPIO=y
+
+# Setup clocks
+CONFIG_SOC_LFXO_CAP_INTERNAL=y
+CONFIG_SOC_LFXO_CAP_INT_VALUE_X2=31
+CONFIG_SOC_HFXO_CAP_INTERNAL=y
+CONFIG_SOC_HFXO_CAP_INT_VALUE_X4=60
+
+# TODO: Should be investigated and fixed, uarte limitation
+CONFIG_SHELL_BACKEND_SERIAL_INTERRUPT_DRIVEN=n
+
+# Protected storage depends on BUILTIN_KEYS
+CONFIG_TFM_PARTITION_PROTECTED_STORAGE=n
+
+# NCSDK-22600: Built-in keys are not supported yet.
+CONFIG_TFM_CRYPTO_BUILTIN_KEYS=n

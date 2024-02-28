@@ -1,0 +1,177 @@
+/*
+ * Copyright (c) 2023 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+#include "nrf54l15dk_nrf54l15_common-pinctrl.dtsi"
+
+/ {
+	model = "Nordic nRF54L15 DK nRF54L15 Application MCU";
+	compatible = "nordic,nrf54l15dk_nrf54l15-cpuapp";
+
+	chosen {
+		zephyr,console = &uart20;
+		zephyr,shell-uart = &uart20;
+		zephyr,ieee802154 = &ieee802154;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+			label = "Green LED 0";
+		};
+		led1: led_1 {
+			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+			label = "Green LED 1";
+		};
+		led2: led_2 {
+			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+			label = "Green LED 2";
+		};
+		led3: led_3 {
+			gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
+			label = "Green LED 3";
+		};
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+		button0: button_0 {
+			gpios = <&gpio1 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Push button 0";
+		};
+		button1: button_1 {
+			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Push button 1";
+		};
+		button2: button_2 {
+			gpios = <&gpio2 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Push button 2";
+		};
+		button3: button_3 {
+			gpios = <&gpio2 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Push button 3";
+		};
+	};
+
+	aliases {
+		led0 = &led0;
+		led1 = &led1;
+		led2 = &led2;
+		led3 = &led3;
+		sw0 = &button0;
+		sw1 = &button1;
+		sw2 = &button2;
+		sw3 = &button3;
+		watchdog0 = &wdt30;
+	};
+
+};
+
+&uart20 {
+	status = "okay";
+	current-speed = <115200>;
+	pinctrl-0 = <&uart20_default>;
+	pinctrl-1 = <&uart20_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&uart30 {
+	current-speed = <115200>;
+	pinctrl-0 = <&uart30_default>;
+	pinctrl-1 = <&uart30_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&gpio2 {
+	status = "okay";
+};
+
+&gpiote20 {
+	status = "okay";
+};
+
+&gpiote30 {
+	status = "okay";
+};
+
+&adc {
+	status = "okay";
+};
+
+&nfct {
+	status = "okay";
+};
+
+&ieee802154 {
+	status = "okay";
+};
+
+&grtc {
+	owned-channels = <0 1 2 3 4 5 6 7 8 9 10 11>;
+	child-owned-channels = <7 8 9 10 11>; /* reserved channels for MPSL */
+	interrupts = <228 NRF_DEFAULT_IRQ_PRIORITY
+	              229 NRF_DEFAULT_IRQ_PRIORITY >; /* MPSL uses the GRTC_3_IRQn */
+	status = "okay";
+};
+
+/* Disable by default to use GRTC */
+&systick {
+	status = "disabled";
+};
+
+&rram0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* TODO: NCSDK-24862: This is the same layout as 91. Update the addresses
+		* to reflect the increased memory available on 54l. */
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x00000000 0x10000>;
+		};
+		slot0_partition: partition@0 {
+			label = "image-0";
+		};
+		slot0_ns_partition: partition@0 {
+			label = "image-0-nonsecure";
+		};
+		slot1_partition: partition@0 {
+			label = "image-1";
+		};
+		slot1_ns_partition: partition@0 {
+			label = "image-1-nonsecure";
+		};
+	};
+};
+
+/ {
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		/* TODO: NCSDK-24862: This is the same layout as 91. Update the addresses
+		* to reflect the increased memory available on 54l. */
+
+		sram0_s: image_s@20000000 {
+			/* Secure image memory */
+		};
+	};
+};
+
+/* Include partition configuration file */
+#include "nrf54l15dk_nrf54l15_partition_conf.dts"

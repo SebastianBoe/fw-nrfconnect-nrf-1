@@ -1,0 +1,21 @@
+# Copyright (c) 2022 Nordic Semiconductor ASA
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+
+identifier: nrf54l15dk_nrf54l15_cpuapp_ns@soc1
+name: nRF54l15-DK-nRF54l15-Application-Non-Secure-Revision-SOC1
+type: mcu
+arch: arm
+toolchain:
+  - gnuarmemb
+  - xtools
+  - zephyr
+ram: 192
+flash: 192
+supported:
+  - gpio
+  - i2c
+  - spi
+  - counter
+  - watchdog
+  - adc
+  - i2s

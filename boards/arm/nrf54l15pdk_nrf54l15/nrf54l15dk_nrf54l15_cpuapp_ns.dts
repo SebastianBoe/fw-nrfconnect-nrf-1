@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2022 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+/dts-v1/;
+#include <nordic/nrf54l15_cpuappns.dtsi>
+#include "nrf54l15dk_nrf54l15_common.dts"
+
+/ {
+	chosen {
+		zephyr,flash = &rram0;
+		zephyr,sram = &sram0_ns;
+		zephyr,code-partition = &slot0_ns_partition;
+		zephyr,sram-non-secure-partition = &sram0_ns;
+	};
+};
+
+/ {
+
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		/* TODO: NCSDK-24862: This is the same layout as 91. Update the addresses
+		* to reflect the increased memory available on 54l. */
+
+		sram0_s: image_s@20000000 {
+			/* Secure image memory */
+			reg = <0x20000000 DT_SIZE_K(64)>;
+		};
+
+		sram0_ns: image_ns@20010000 {
+			/* Non-Secure image memory */
+			reg = <0x20010000 DT_SIZE_K(192)>;
+		};
+	};
+};
+
+/* TODO: Disable the UART used by TF-M. */

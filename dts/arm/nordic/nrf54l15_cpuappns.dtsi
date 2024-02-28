@@ -1,0 +1,89 @@
+ /*
+ * Copyright (c) 2022 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+#include <arm/armv8-m.dtsi>
+#include <common/nordic_nrf_next/nrf_common.dtsi>
+#include <common/nordic_nrf_next/nrf54l_common.dtsi>
+
+/ {
+	chosen {
+		zephyr,flash-controller = &rram_controller;
+		zephyr,entropy = &psa_rng;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			clock-frequency = <128000000>;
+			device_type = "cpu";
+			compatible = "arm,cortex-m33f";
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+		};
+	};
+
+	soc {
+		sram0: memory@20000000 {
+			device_type = "memory";
+			compatible = "mmio-sram";
+			reg = <0x20000000 DT_SIZE_K(256)>;
+		};
+
+		peripheral@40000000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0x0 0x40000000 0x10000000>;
+
+			/* Common nRF54L15 peripheral description */
+			#include "nrf54l15_cpuapp_peripherals.dtsi"
+		};
+	};
+
+	psa_rng: psa-rng {
+		compatible = "zephyr,psa-crypto-rng";
+		status = "okay";
+	};
+
+	rng: rng {
+		status = "okay";
+		compatible = "nordic,entropy-prng";
+	};
+
+	cracen: cracen {
+		compatible = "nordic,nrf-cracen";
+		status = "okay";
+	};
+};
+
+&nvic {
+	arm,num-irq-priority-bits = <3>;
+};
+
+&rram_controller {
+	rram0: rram@0 {
+		compatible = "soc-nv-flash";
+		/*
+		 * "1524 KB non-volatile memory (RRAM) and 256 KB RAM"
+		 *    -- Product Specification
+		 * NB: 1524 = 1.5 * 1024 - 12
+		 */
+		reg = <0x0 DT_SIZE_K(1524)>;
+		erase-block-size = <4096>;
+		write-block-size = <1>;
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			slot0_partition: partition@0 {
+				label = "image-0";
+				reg = <0x0 DT_SIZE_K(64)>;
+			};
+		};
+	};
+};

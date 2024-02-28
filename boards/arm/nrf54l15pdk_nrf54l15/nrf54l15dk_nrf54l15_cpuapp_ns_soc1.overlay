@@ -1,0 +1,7 @@
+/*
+ * Copyright (c) 2022 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+#include <common/nordic_nrf_next/nrf54l15_soc1_common.dtsi>
