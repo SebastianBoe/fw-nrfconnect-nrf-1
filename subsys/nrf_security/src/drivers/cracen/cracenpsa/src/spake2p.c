@@ -445,30 +445,9 @@ static psa_status_t cracen_write_confirm(cracen_spake2p_operation_t *operation, 
 	return PSA_SUCCESS;
 }
 
-psa_status_t cracen_spake2p_setup(cracen_spake2p_operation_t *operation,
-				  const psa_pake_cipher_suite_t *cipher_suite)
-{
-	if (cipher_suite->algorithm != PSA_ALG_SPAKE2P ||
-	    cipher_suite->type != PSA_PAKE_PRIMITIVE_TYPE_ECC ||
-	    cipher_suite->family != PSA_ECC_FAMILY_SECP_R1 || cipher_suite->bits != 256 ||
-	    cipher_suite->hash != PSA_ALG_SHA_256) {
-		return PSA_ERROR_NOT_SUPPORTED;
-	}
-
-	psa_status_t status =
-		cracen_ecc_get_ecurve_from_psa(PSA_ECC_FAMILY_SECP_R1, 256, &operation->curve);
-
-	if (status != PSA_SUCCESS) {
-		return status;
-	}
-
-	/* Initialize hash for protocol transcript TT. */
-	return cracen_hash_setup(&operation->hash_op, cipher_suite->hash);
-}
-
-psa_status_t cracen_spake2p_set_password_key(cracen_spake2p_operation_t *operation,
-					     const psa_key_attributes_t *attributes,
-					     const uint8_t *password, size_t password_length)
+static psa_status_t set_password_key(cracen_spake2p_operation_t *operation,
+				     const psa_key_attributes_t *attributes,
+				     const uint8_t *password, size_t password_length)
 {
 	psa_status_t status;
 
@@ -515,6 +494,34 @@ psa_status_t cracen_spake2p_set_password_key(cracen_spake2p_operation_t *operati
 	return PSA_SUCCESS;
 }
 
+psa_status_t cracen_spake2p_setup(cracen_spake2p_operation_t *operation,
+
+				  const psa_key_attributes_t *attributes, const uint8_t *password,
+				  size_t password_length,
+				  const psa_pake_cipher_suite_t *cipher_suite)
+{
+	if (psa_pake_cs_get_primitive(cipher_suite) !=
+		    PSA_PAKE_PRIMITIVE(PSA_PAKE_PRIMITIVE_TYPE_ECC, PSA_ECC_FAMILY_SECP_R1, 256) ||
+	    psa_pake_cs_get_key_confirmation(cipher_suite) != PSA_PAKE_CONFIRMED_KEY) {
+		return PSA_ERROR_NOT_SUPPORTED;
+	}
+
+	psa_status_t status =
+		cracen_ecc_get_ecurve_from_psa(PSA_ECC_FAMILY_SECP_R1, 256, &operation->curve);
+
+	if (status != PSA_SUCCESS) {
+		return status;
+	}
+
+	status = set_password_key(operation, attributes, password, password_length);
+	if (status != PSA_SUCCESS) {
+		return status;
+	}
+
+	/* Initialize hash for protocol transcript TT. */
+	return cracen_hash_setup(&operation->hash_op, PSA_ALG_SHA_256);
+}
+
 psa_status_t cracen_spake2p_set_user(cracen_spake2p_operation_t *operation, const uint8_t *user_id,
 				     size_t user_id_len)
 {
@@ -557,6 +564,16 @@ psa_status_t cracen_spake2p_set_peer(cracen_spake2p_operation_t *operation, cons
 	return PSA_SUCCESS;
 }
 
+psa_status_t cracen_spake2p_set_context(cracen_spake2p_operation_t *operation,
+					const uint8_t *context, size_t context_len)
+{
+	if (context_len == 0) {
+		return PSA_SUCCESS;
+	}
+
+	return cracen_update_hash_with_length(&operation->hash_op, context, context_len, 0);
+}
+
 psa_status_t cracen_spake2p_set_role(cracen_spake2p_operation_t *operation, psa_pake_role_t role)
 {
 	switch (role) {
@@ -596,8 +613,6 @@ psa_status_t cracen_spake2p_input(cracen_spake2p_operation_t *operation, psa_pak
 		return cracen_read_key_share(operation, input, input_length);
 	case PSA_PAKE_STEP_CONFIRM:
 		return cracen_read_confirm(operation, input, input_length);
-	case PSA_PAKE_STEP_CONTEXT:
-		return cracen_update_hash_with_length(&operation->hash_op, input, input_length, 0);
 	default:
 		return PSA_ERROR_INVALID_ARGUMENT;
 	}
