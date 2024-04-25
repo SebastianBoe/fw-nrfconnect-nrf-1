@@ -1,0 +1,8 @@
+factory_data:
+  address: 0x174000
+  region: flash_primary
+  size: 0x1000
+settings_storage:
+  address: 0x175000
+  region: flash_primary
+  size: 0x8000
