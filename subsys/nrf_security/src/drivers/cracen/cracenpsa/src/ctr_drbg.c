@@ -12,12 +12,15 @@
 #include "common.h"
 #include "cracen_psa_primitives.h"
 #include <cracen/statuscodes.h>
+#include <security/cracen.h>
 #include <sicrypto/sicrypto.h>
 #include <sicrypto/drbgctr.h>
 #include <sxsymcrypt/trng.h>
 #include <sxsymcrypt/aes.h>
 #include <sxsymcrypt/keyref.h>
 #include <zephyr/kernel.h>
+
+#include <nrf_security_mutexes.h>
 
 /*
  * This driver uses a global context and discards the context passed from the user.
@@ -29,7 +32,14 @@
  * that these issues will cause trouble in the future and so we simplify the driver here.
  */
 static cracen_prng_context_t prng;
-K_MUTEX_DEFINE(cracen_prng_context_mutex);
+
+
+#if defined(CONFIG_MULTITHREADING) && !defined(__NRF_TFM__)
+K_MUTEX_DEFINE(k_cracen_prng_context_mutex);
+nrf_security_mutex_t cracen_prng_context_mutex = { .zephyr_mutex = &k_cracen_prng_context_mutex };
+#else
+nrf_security_mutex_t cracen_prng_context_mutex;
+#endif
 
 /*
  * @brief Internal function to enable TRNG and get entropy for initial seed and
@@ -113,7 +123,7 @@ psa_status_t cracen_init_random(cracen_prng_context_t *context)
 	char entropy[CRACEN_PRNG_ENTROPY_SIZE +
 		     CRACEN_PRNG_NONCE_SIZE]; /* DRBG entropy + nonce buffer. */
 
-	k_mutex_lock(&cracen_prng_context_mutex, K_FOREVER);
+	nrf_security_mutex_lock(cracen_prng_context_mutex);
 
 	if (prng.initialized == CRACEN_PRNG_INITIALIZED) {
 		sx_err = SX_OK;
@@ -150,7 +160,7 @@ psa_status_t cracen_init_random(cracen_prng_context_t *context)
 	}
 
 exit:
-	k_mutex_unlock(&cracen_prng_context_mutex);
+	nrf_security_mutex_unlock(cracen_prng_context_mutex);
 
 	return silex_statuscodes_to_psa(sx_err);
 }
@@ -176,7 +186,7 @@ psa_status_t cracen_get_random(cracen_prng_context_t *context, uint8_t *output, 
 		}
 	}
 
-	k_mutex_lock(&cracen_prng_context_mutex, K_FOREVER);
+	nrf_security_mutex_lock(cracen_prng_context_mutex);
 
 	while (len_left > 0) {
 		/* Clamp to largest request size. */
@@ -204,7 +214,7 @@ psa_status_t cracen_get_random(cracen_prng_context_t *context, uint8_t *output, 
 	}
 
 exit:
-	k_mutex_unlock(&cracen_prng_context_mutex);
+	nrf_security_mutex_unlock(cracen_prng_context_mutex);
 	return silex_statuscodes_to_psa(sx_err);
 }
 

@@ -20,6 +20,7 @@ set(cracen_driver_include_dirs
 )
 
 # Add more CRACEN sources and include dirs from the ext directory
+include(${NRF_SECURITY_ROOT}/src/utils/nrf_security_utils.cmake)
 include(sxsymcrypt/sxsymcrypt.cmake)
 include(silexpk/silexpk.cmake)
 include(sicrypto/sicrypto.cmake)
@@ -29,12 +30,14 @@ target_sources(
   ${mbedcrypto_target}
   PRIVATE
   ${cracen_driver_sources}
+  ${nrf_security_utils_sources}
 )
 
 target_include_directories(
   ${mbedcrypto_target}
   PUBLIC
   ${cracen_driver_include_dirs}
+  ${nrf_security_utils_include_dirs}
 )
 
 # The CRACEN sources have not been written to comply with this gcc
