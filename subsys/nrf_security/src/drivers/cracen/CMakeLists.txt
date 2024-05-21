@@ -26,11 +26,21 @@ include(silexpk/silexpk.cmake)
 include(sicrypto/sicrypto.cmake)
 include(cracenpsa/cracenpsa.cmake)
 
+if(BUILD_INSIDE_TFM)
+target_sources(
+  ${mbedcrypto_target}
+  PRIVATE
+  ${nrf_security_utils_sources}
+)
+else()
+  zephyr_library()
+  zephyr_library_sources(${nrf_security_utils_sources})
+endif()
+
 target_sources(
   ${mbedcrypto_target}
   PRIVATE
   ${cracen_driver_sources}
-  ${nrf_security_utils_sources}
 )
 
 target_include_directories(
