@@ -8,7 +8,7 @@
 
 int main(void)
 {
-	printf("Hello World! %s\n", CONFIG_BOARD_TARGET);
+	printf("Hello World! main function at %x\n", (int)main);
 
 	return 0;
 }
