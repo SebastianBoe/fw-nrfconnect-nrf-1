@@ -5,17 +5,16 @@ in a local domain application
 # flash the provisioning image to RAM
 nrfutil device x-execute-batch --batch-path ~/ncs/core_fw/secdom/scripts/generated_nrfutil_batch.json --serial-number $(nrfjprog -i)
 
-# Set the PC and SP appropriately and start the local domain CPU
-0x2f01b9b8
-0x2f0124a4
+# Set the PC and start the local domain CPU
 
-nrfutil device go --traits jlink --core Application --stack-pointer 0x2f01b998 --program-counter 0x2f0124a4 --x-family nrf54h --log-level trace
+nrfutil device go --traits jlink --core Application --program-counter ? --x-family nrf54h --log-level trace
 
-set $sp = 0x2f01b998
-set $pc = 0x2f0124a4
+set $pc = 0x2f014754
 
 # ?
 python ~/ncs/core_fw/secdom/scripts/simple.py bootmode-set --opcode debugwait
 python ~/ncs/core_fw/secdom/scripts/simple.py debug-reset --secdom
 
 stepping through the whole program works
+
+# Do we need to set the SP?
