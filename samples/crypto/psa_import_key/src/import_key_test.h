@@ -16,21 +16,15 @@ int generate_ecdsa_keypair(void)
 	psa_status_t status;
 	size_t olen;
 
-	LOG_INF("Generating random ECDSA keypair...");
-
 	/* Configure the key attributes */
 	psa_key_attributes_t key_attributes = PSA_KEY_ATTRIBUTES_INIT;
 
-	/* Configure the key attributes */
 	psa_set_key_usage_flags(&key_attributes, PSA_KEY_USAGE_SIGN_HASH);
 	psa_set_key_lifetime(&key_attributes, PSA_KEY_LIFETIME_VOLATILE);
 	psa_set_key_algorithm(&key_attributes, PSA_ALG_ECDSA(PSA_ALG_SHA_256));
 	psa_set_key_type(&key_attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_SECP_R1));
 	psa_set_key_bits(&key_attributes, 256);
 
-	/* Generate a random keypair. The keypair is not exposed to the application,
-	 * we can use it to sign hashes.
-	 */
 	status = psa_generate_key(&key_attributes, &keypair_id);
 	if (status != PSA_SUCCESS) {
 		LOG_INF("psa_generate_key failed! (Error: %d)", status);
@@ -58,20 +52,53 @@ void fake_flashing_of_psa_keys(struct psa_import_key_args_in_ram *args_in_ram)
 		k_oops();
 	}
 
-	args_in_ram->num_psa_keys = 1;
+	args_in_ram->num_psa_keys = 2;
 
-	struct psa_import_key_args *key1 = (struct psa_import_key_args *)args_in_ram->psa_keys;
-    key1->magic = 0x5eb0;
-    key1->key = 0x40000001;    // Observed value
+	struct psa_import_key_args *key = (struct psa_import_key_args *)args_in_ram->psa_keys;
 
-	key1->attributes = psa_key_attributes_init();
+	uint8_t * args_bytes = (uint8_t *)key;
+	uint32_t data_length;
 
-	psa_set_key_usage_flags(&key1->attributes, PSA_KEY_USAGE_VERIFY_HASH);
-	psa_set_key_lifetime(&key1->attributes, PSA_KEY_LIFETIME_VOLATILE);
-	psa_set_key_algorithm(&key1->attributes, PSA_ALG_ECDSA(PSA_ALG_SHA_256));
-	psa_set_key_type(&key1->attributes, PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_SECP_R1));
-	psa_set_key_bits(&key1->attributes, 256);
+    key->magic = 0x5eb0;
+    key->key = 0x40000001;    // Observed value
 
-    key1->data_length = sizeof(m_pub_key);
-    memcpy((uint8_t *)key1->data, m_pub_key, key1->data_length);
+	key->attributes = psa_key_attributes_init();
+
+	psa_set_key_usage_flags(&key->attributes, PSA_KEY_USAGE_VERIFY_HASH);
+	psa_set_key_lifetime(&key->attributes, PSA_KEY_LIFETIME_VOLATILE);
+	psa_set_key_algorithm(&key->attributes, PSA_ALG_ECDSA(PSA_ALG_SHA_256));
+	psa_set_key_type(&key->attributes, PSA_KEY_TYPE_ECC_PUBLIC_KEY(PSA_ECC_FAMILY_SECP_R1));
+	psa_set_key_bits(&key->attributes, 256);
+
+	data_length = sizeof(m_pub_key);
+
+    key->data_length = data_length;
+    memcpy((uint8_t *)key->data, m_pub_key, key->data_length);
+
+	{
+		args_bytes += sizeof(struct psa_import_key_args);
+		args_bytes += data_length;
+
+		key = (struct psa_import_key_args *)args_bytes;
+
+		memset(key, 0, sizeof(*key));
+
+		key->magic = 0x5eb0;
+
+		key->key = 0x40000002;    // Observed value
+
+		psa_set_key_type(&key->attributes, PSA_KEY_TYPE_AES);
+		psa_set_key_bits(&key->attributes, 128);
+		psa_set_key_usage_flags(&key->attributes, PSA_KEY_USAGE_ENCRYPT | PSA_KEY_USAGE_DECRYPT);
+		psa_set_key_algorithm(&key->attributes, PSA_ALG_CBC_NO_PADDING);
+
+		// Define the raw key material (16 bytes for AES-128)
+		uint8_t raw_key[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+
+		data_length = sizeof(raw_key);
+
+		key->data_length = data_length;
+		memcpy((uint8_t *)key->data, raw_key, key->data_length);
+	}
 }
