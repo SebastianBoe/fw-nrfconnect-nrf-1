@@ -14,10 +14,6 @@
 #include <psa/crypto_extra.h>
 #include <zephyr/logging/log.h>
 
-#ifdef IMPORT_KEY_TEST
-#include "import_key_test.h"
-#endif
-
 /* [0] As a special case, the last element of a structure with more
  * than one named member may have an incomplete array type; this is
  * called a flexible array member. In most situations, the flexible
@@ -29,12 +25,12 @@
 struct psa_import_key_args {
 	uint32_t magic;
 	psa_key_id_t key;
-	const psa_key_attributes_t attributes;
+	psa_key_attributes_t attributes;
 	size_t data_length;
 	/* Note that when we later calculate the sizeof this struct that
 	 * the data member will be omitted[0].
 	 */
-	const uint8_t data[];
+	uint8_t data[];
 };
 
 struct psa_import_key_args_in_ram {
@@ -43,6 +39,10 @@ struct psa_import_key_args_in_ram {
 };
 
 struct psa_import_key_args_in_ram *args_in_ram = (struct psa_import_key_args_in_ram *)0x2f021000;
+
+#ifdef IMPORT_KEY_TEST
+#include "import_key_test.h"
+#endif
 
 int main(void)
 {

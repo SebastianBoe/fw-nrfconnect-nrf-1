@@ -10,5 +10,7 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(sha256)
 
+zephyr_compile_definitions(IMPORT_KEY_TEST)
+
 target_sources(app PRIVATE
         src/main.c)
