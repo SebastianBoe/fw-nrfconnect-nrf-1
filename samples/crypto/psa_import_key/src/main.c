@@ -14,6 +14,8 @@
 #include <psa/crypto_extra.h>
 #include <zephyr/logging/log.h>
 
+LOG_MODULE_REGISTER(psa_import_key, LOG_LEVEL_DBG);
+
 /* [0] As a special case, the last element of a structure with more
  * than one named member may have an incomplete array type; this is
  * called a flexible array member. In most situations, the flexible
@@ -58,16 +60,24 @@ int main(void)
 
 	for (int i = 0; i < args_in_ram->num_psa_keys; i++) {
 		if(args->magic != 0x5eb0) {
-			printf("magic value not found. Were the keys flashed correctly?\n");
+			LOG_INF("magic value not found. Were the keys flashed correctly?");
 			return 1;
 		}
 
+		psa_key_id_t new_key_id;
 		psa_status_t status = psa_import_key(&(args->attributes), args->data,
-						     args->data_length, &(args->key));
+						     args->data_length, &new_key_id);
 		if (status) {
-			printf("psa_import_key failed with status %d\n", status);
+			LOG_INF("psa_import_key failed with status %d", status);
 			return 1;
 		}
+
+		if(args->key != new_key_id) {
+			LOG_INF("Expected psa_import_key to create a key with id %x, but was %x", args->key, new_key_id);
+			return 1;
+		}
+
+		LOG_INF("Successfully imported a key");
 
 		/* see [0] */
 		args_bytes += sizeof(struct psa_import_key_args);
@@ -76,5 +86,5 @@ int main(void)
 		args = (struct psa_import_key_args *)args_bytes;
 	}
 
-	printf("finished importing %d psa keys", args_in_ram->num_psa_keys);
+	LOG_INF("finished importing %d psa keys", args_in_ram->num_psa_keys);
 }
