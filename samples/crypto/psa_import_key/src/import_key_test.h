@@ -52,7 +52,7 @@ void fake_flashing_of_psa_keys(struct psa_import_key_args_in_ram *args_in_ram)
 		k_oops();
 	}
 
-	args_in_ram->num_psa_keys = 2;
+	args_in_ram->num_psa_keys = 3;
 
 	struct psa_import_key_args *key = (struct psa_import_key_args *)args_in_ram->psa_keys;
 
@@ -91,6 +91,37 @@ void fake_flashing_of_psa_keys(struct psa_import_key_args_in_ram *args_in_ram)
 		psa_set_key_bits(&key->attributes, 128);
 		psa_set_key_usage_flags(&key->attributes, PSA_KEY_USAGE_ENCRYPT | PSA_KEY_USAGE_DECRYPT);
 		psa_set_key_algorithm(&key->attributes, PSA_ALG_CBC_NO_PADDING);
+
+		// Define the raw key material (16 bytes for AES-128)
+		uint8_t raw_key[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+
+		data_length = sizeof(raw_key);
+
+		key->data_length = data_length;
+		memcpy((uint8_t *)key->data, raw_key, key->data_length);
+	}
+	{
+		args_bytes += sizeof(struct psa_import_key_args);
+		args_bytes += data_length;
+
+		key = (struct psa_import_key_args *)args_bytes;
+
+		memset(key, 0, sizeof(*key));
+
+		key->magic = 0x5eb0;
+
+		key->key = PSA_KEY_ID_USER_MAX - 1;
+
+		psa_set_key_type(&key->attributes, PSA_KEY_TYPE_AES);
+		psa_set_key_bits(&key->attributes, 128);
+		psa_set_key_usage_flags(&key->attributes, PSA_KEY_USAGE_ENCRYPT | PSA_KEY_USAGE_DECRYPT);
+		psa_set_key_algorithm(&key->attributes, PSA_ALG_CBC_NO_PADDING);
+
+		psa_set_key_lifetime(&key->attributes, PSA_KEY_LIFETIME_PERSISTENT);
+
+		/* We set the ID because it is a persistent key */
+		psa_set_key_id(&key->attributes, key->key);
 
 		// Define the raw key material (16 bytes for AES-128)
 		uint8_t raw_key[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
