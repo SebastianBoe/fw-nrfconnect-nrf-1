@@ -7,5 +7,27 @@
 / {
 	chosen {
 		zephyr,code-partition = &secondary_partition;
+		/* Use uart136 to match cpuapp console for test visibility */
+		zephyr,console = &uart136;
+		zephyr,shell-uart = &uart136;
 	};
+};
+
+/* Disable uart135 and use uart136 instead */
+&uart135 {
+	status = "disabled";
+};
+
+/* Use cpuapp's DMA region for uart136 */
+&cpurad_dma_region {
+	status = "disabled";
+};
+
+cpurad_dma_region_alt: &cpuapp_dma_region {
+	status = "okay";
+};
+
+&uart136 {
+	status = "okay";
+	memory-regions = <&cpurad_dma_region_alt>;
 };

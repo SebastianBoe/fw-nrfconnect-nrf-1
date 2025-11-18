@@ -22,7 +22,7 @@ Overview
 The sample consists of two applications:
 
 * *Primary Image*: Runs initially on the application core (``cpuapp``), prints a ``Hello World`` message, and includes stub functions for the Secure Domain service calls to boot the secondary image.
-* *Secondary Image*: Runs on the same application core after the primary image initiates the boot sequence and prints its own ``Hello World`` message.
+* *Secondary Image*: Runs on the radio core (``cpurad``) after the primary image initiates the boot sequence and prints its own ``Hello World`` message.
 
 Building and running
 ********************
@@ -50,7 +50,7 @@ After programming the test to your development kit, complete the following steps
 
 1. |connect_terminal|
 #. Reset the kit.
-#. Observe the console output for both cores:
+#. Observe the console output from both the application core (primary) and radio core (secondary):
 
 .. code-block:: console
 
