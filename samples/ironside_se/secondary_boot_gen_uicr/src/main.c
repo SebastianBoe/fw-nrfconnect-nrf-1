@@ -16,6 +16,7 @@ int main(void)
 	printk("=== Hello World from Primary Image ===\n");
 
 	printk("Booting secondary image\n");
+	k_msleep(5000);
 	err = ironside_bootmode_secondary_reboot(NULL, 0);
 	if (err != 0) {
 		printk("Secondary image boot failed: %d\n", err);

@@ -24,3 +24,8 @@ tests:
       - nrf54h20dk/nrf54h20/cpuapp
     integration_platforms:
       - nrf54h20dk/nrf54h20/cpuapp
+      - nrf54h20dk/nrf54h20/cpurad
+    timeout: 10
+    extra_args:
+      - EXTRA_DTC_OVERLAY_FILE="app.overlay"
+      - print_reset_reason_CONFIG_SOC_NRF54H20_CPURAD_ENABLE=y

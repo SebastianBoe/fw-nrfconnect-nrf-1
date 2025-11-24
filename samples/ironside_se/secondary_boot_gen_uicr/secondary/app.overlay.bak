@@ -1,0 +1,31 @@
+
+/ {	
+	chosen {
+		zephyr,code-partition = &secondary_partition;
+		/* Use uart136 to match cpuapp console for test visibility */
+	};
+};
+
+
+/* Redefine in partitions container */
+&mram1x {
+	partitions {
+		/delete-node/ partition@100000;
+		/delete-node/ partition@152000;
+
+		cpuapp_slot1_partition: partition@100000 {
+			reg = < 0x100000 0x52000 >;
+			label = "image-1";
+		};
+		
+		cpurad_slot1_partition: partition@152000 {
+			label = "cpurad_slot1";
+			reg = <0x152000 0x26000>;
+		};
+		
+		secondary_app_partition: partition@178000 {
+			label = "secondary_app";
+			reg = <0x178000 0x26000>;
+		};
+	};
+};
