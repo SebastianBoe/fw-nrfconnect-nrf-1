@@ -1,0 +1,7 @@
+
+/ {	
+	chosen {
+		zephyr,code-partition = &secondary_partition;
+		/* Use uart136 to match cpuapp console for test visibility */
+	};
+};
