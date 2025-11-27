@@ -26,6 +26,7 @@ tests:
       type: multi_line
       regex:
         - ".*Example finished successfully!.*"
+    timeout: 7
     integration_platforms:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf5340dk/nrf5340/cpuapp
@@ -55,6 +56,7 @@ tests:
       type: multi_line
       regex:
         - .*Example finished successfully!.*
+    timeout: 7
     integration_platforms:
       - nrf5340dk/nrf5340/cpunet
       - nrf54l15dk/nrf54l15/cpuapp
@@ -84,6 +86,7 @@ tests:
       type: multi_line
       regex:
         - ".*Example finished successfully!.*"
+    timeout: 7
     integration_platforms:
       - nrf54l15dk/nrf54l15/cpuapp
       - nrf54l15dk/nrf54l15/cpuapp/ns
@@ -143,5 +146,6 @@ tests:
       type: multi_line
       regex:
         - ".*Example finished successfully!.*"
+    timeout: 7
     integration_platforms:
       - nrf54h20dk/nrf54h20/cpuapp
