@@ -4,14 +4,43 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
+#include <zephyr/devicetree.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/reboot.h>
+#include <zephyr/sys/util.h>
 #include <ironside/se/api.h>
 #include <ironside/se/boot_report.h>
 #include <ironside/se/uicr_deploy.h>
 
 LOG_MODULE_REGISTER(snapshot_capture_recover, CONFIG_LOG_DEFAULT_LEVEL);
+
+#if DT_NODE_EXISTS(DT_NODELABEL(periphconf_partition))
+#define PERIPHCONF_PARTITION_NODE DT_NODELABEL(periphconf_partition)
+/* LOG_HEXDUMP_* allocates log workspace from the caller stack; keep chunks small. */
+#define PERIPHCONF_LOG_CHUNK	  16U
+#define PERIPHCONF_LOG_BYTES_MAX  512U
+
+static void log_periphconf_partition_at_boot(void)
+{
+	const uintptr_t addr = DT_REG_ADDR(PERIPHCONF_PARTITION_NODE);
+	const size_t size = DT_REG_SIZE(PERIPHCONF_PARTITION_NODE);
+	const size_t dump_len = MIN(size, PERIPHCONF_LOG_BYTES_MAX);
+	const uint8_t *data = (const uint8_t *)addr;
+
+	LOG_INF("periphconf partition @0x%08x, size %zu bytes (logging first %zu bytes)",
+		(uint32_t)addr, size, dump_len);
+	for (size_t off = 0U; off < dump_len; off += PERIPHCONF_LOG_CHUNK) {
+		const size_t chunk = MIN(PERIPHCONF_LOG_CHUNK, dump_len - off);
+
+		LOG_HEXDUMP_INF(&data[off], chunk, "periphconf");
+	}
+}
+#else
+static void log_periphconf_partition_at_boot(void)
+{
+}
+#endif
 
 #define IRONSIDE_NV_COUNTER_ID IRONSIDE_SE_COUNTER_0
 #define SNAPSHOT_MAX_CYCLES    6U
@@ -81,6 +110,8 @@ static void heartbeat_with_mram_read_sweeps(void)
 
 int main(void)
 {
+	log_periphconf_partition_at_boot();
+
 	const struct ironside_se_boot_report *boot_report = IRONSIDE_SE_BOOT_REPORT;
 	uint32_t nv_counter_at_boot;
 	uint32_t nv_counter_current;
