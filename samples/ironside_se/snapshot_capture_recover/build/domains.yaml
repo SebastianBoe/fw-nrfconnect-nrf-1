@@ -1,0 +1,10 @@
+default: snapshot_capture_recover
+build_dir: /home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build
+domains:
+  - name: snapshot_capture_recover
+    build_dir: /home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/snapshot_capture_recover
+  - name: uicr
+    build_dir: /home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/uicr
+flash_order:
+  - snapshot_capture_recover
+  - uicr

@@ -1,0 +1,13 @@
+# Target labels
+ uicr
+# Source files and their labels
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/CMakeFiles/uicr
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/CMakeFiles/uicr.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/CMakeFiles/uicr-complete.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-build.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-configure.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-download.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-install.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-mkdir.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-patch.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-update.rule

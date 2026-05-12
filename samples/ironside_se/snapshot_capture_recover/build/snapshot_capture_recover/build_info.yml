@@ -1,0 +1,56 @@
+cmake:
+  application:
+    configuration-dir: '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover'
+    source-dir: '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover'
+  board:
+    name: 'nrf54h20dk'
+    path:
+     - '/home/sebo/ncs/zephyr/boards/nordic/nrf54h20dk'
+    qualifiers: 'nrf54h20/cpuapp'
+    revision: '0.9.0'
+  devicetree:
+    bindings-dirs:
+     - '/home/sebo/ncs/nrf/dts/bindings'
+     - '/home/sebo/ncs/zephyr/dts/bindings'
+    files:
+     - '/home/sebo/ncs/zephyr/boards/nordic/nrf54h20dk/nrf54h20dk_nrf54h20_cpuapp.dts'
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/app.overlay'
+    include-dirs:
+     - '/home/sebo/ncs/nrf/include'
+     - '/home/sebo/ncs/nrf/dts/common'
+     - '/home/sebo/ncs/nrf/dts/riscv'
+     - '/home/sebo/ncs/nrf/dts/arm'
+     - '/home/sebo/ncs/nrf/dts'
+     - '/home/sebo/ncs/zephyr/include'
+     - '/home/sebo/ncs/zephyr/include/zephyr'
+     - '/home/sebo/ncs/zephyr/dts/common'
+     - '/home/sebo/ncs/zephyr/dts/vendor'
+     - '/home/sebo/ncs/zephyr/dts/rx'
+     - '/home/sebo/ncs/zephyr/dts/x86'
+     - '/home/sebo/ncs/zephyr/dts/xtensa'
+     - '/home/sebo/ncs/zephyr/dts/sparc'
+     - '/home/sebo/ncs/zephyr/dts/riscv'
+     - '/home/sebo/ncs/zephyr/dts/posix'
+     - '/home/sebo/ncs/zephyr/dts/arm64'
+     - '/home/sebo/ncs/zephyr/dts/arm'
+     - '/home/sebo/ncs/zephyr/dts/arc'
+     - '/home/sebo/ncs/zephyr/dts'
+    user-files:
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/app.overlay'
+  kconfig:
+    files:
+     - '/home/sebo/ncs/zephyr/boards/nordic/nrf54h20dk/nrf54h20dk_nrf54h20_cpuapp_defconfig'
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/prj.conf'
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/snapshot_capture_recover/zephyr/.config.sysbuild'
+    user-files:
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/prj.conf'
+  toolchain:
+    name: 'zephyr'
+    path: '/home/sebo/bin/zephyr-sdk-1.0.1'
+  vendor-specific:
+    nordic:
+      svdfile: '/home/sebo/ncs/modules/hal/nordic/nrfx/bsp/stable/mdk/nrf54h20_application.svd'
+  zephyr:
+    version: '4.4.0'
+    zephyr-base: '/home/sebo/ncs/zephyr'
+version: '0.1.0'

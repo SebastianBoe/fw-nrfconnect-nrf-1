@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/CMakeFiles/uicr"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/CMakeFiles/uicr.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/CMakeFiles/uicr-complete.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-build.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-configure.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-download.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-install.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-mkdir.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-patch.rule"
+		},
+		{
+			"file" : "/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/soc/uicr-prefix/src/uicr-stamp/uicr-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"uicr"
+		],
+		"name" : "uicr"
+	}
+}

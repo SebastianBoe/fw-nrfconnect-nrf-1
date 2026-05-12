@@ -1,0 +1,24 @@
+Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+Compiler: /home/sebo/bin/zephyr-sdk-1.0.1/gnu/aarch64-zephyr-elf/bin/aarch64-zephyr-elf-gcc 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+/home/sebo/bin/zephyr-sdk-1.0.1/gnu/aarch64-zephyr-elf/bin/../lib/gcc/aarch64-zephyr-elf/14.3.0/../../../../aarch64-zephyr-elf/bin/ld: a.out section `.rodata' will not fit in region `flash'
+/home/sebo/bin/zephyr-sdk-1.0.1/gnu/aarch64-zephyr-elf/bin/../lib/gcc/aarch64-zephyr-elf/14.3.0/../../../../aarch64-zephyr-elf/bin/ld: region `flash' overflowed by 296 bytes
+collect2: error: ld returned 1 exit status
+
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+Compiler: /home/sebo/bin/zephyr-sdk-1.0.1/gnu/aarch64-zephyr-elf/bin/aarch64-zephyr-elf-c++ 
+Build flags: 
+Id flags:  
+
+The output was:
+1
+/home/sebo/bin/zephyr-sdk-1.0.1/gnu/aarch64-zephyr-elf/bin/../lib/gcc/aarch64-zephyr-elf/14.3.0/../../../../aarch64-zephyr-elf/bin/ld: a.out section `.rodata' will not fit in region `flash'
+/home/sebo/bin/zephyr-sdk-1.0.1/gnu/aarch64-zephyr-elf/bin/../lib/gcc/aarch64-zephyr-elf/14.3.0/../../../../aarch64-zephyr-elf/bin/ld: region `flash' overflowed by 296 bytes
+collect2: error: ld returned 1 exit status
+
+

@@ -1,0 +1,2 @@
+"nrf":"/home/sebo/ncs/nrf":"/home/sebo/ncs/nrf/sysbuild"
+"mcuboot":"/home/sebo/ncs/bootloader/mcuboot":"/home/sebo/ncs/bootloader/mcuboot/boot/zephyr/sysbuild"

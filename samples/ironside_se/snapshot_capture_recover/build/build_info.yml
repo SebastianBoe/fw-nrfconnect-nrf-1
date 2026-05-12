@@ -1,0 +1,28 @@
+cmake:
+  application:
+    source-dir: '/home/sebo/ncs/zephyr/share/sysbuild'
+  board:
+    name: 'nrf54h20dk'
+    path:
+     - '/home/sebo/ncs/zephyr/boards/nordic/nrf54h20dk'
+    qualifiers: 'nrf54h20/cpuapp'
+    revision: '0.9.0'
+  images:
+   - name: 'snapshot_capture_recover'
+     source-dir: '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover'
+     type: 'MAIN'
+   - name: 'uicr'
+     source-dir: ''
+  kconfig:
+    files:
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/empty.conf'
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/empty.conf'
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/empty.conf'
+    user-files:
+     - '/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/empty.conf'
+  sysbuild: 'true'
+version: '0.1.0'
+west:
+  command: '/home/sebo/ncs/.venv/bin/west build -b nrf54h20dk/nrf54h20/cpuapp -p'
+  topdir: '/home/sebo/ncs'
+  version: '1.5.0'

@@ -1,0 +1,13 @@
+# Target labels
+ snapshot_capture_recover
+# Source files and their labels
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/CMakeFiles/snapshot_capture_recover
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/CMakeFiles/snapshot_capture_recover.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/CMakeFiles/snapshot_capture_recover-complete.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-build.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-configure.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-download.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-install.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-mkdir.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-patch.rule
+/home/sebo/ncs/nrf/samples/ironside_se/snapshot_capture_recover/build/_sysbuild/sysbuild/images/snapshot_capture_recover-prefix/src/snapshot_capture_recover-stamp/snapshot_capture_recover-update.rule
