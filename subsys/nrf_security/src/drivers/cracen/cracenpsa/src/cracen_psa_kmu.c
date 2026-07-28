@@ -290,7 +290,9 @@ int cracen_kmu_prepare_key(const uint8_t *user_data)
 
 	switch (key->key_usage_scheme) {
 	case CRACEN_KMU_KEY_USAGE_SCHEME_RAW:
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 	case CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED:
+#endif /* CONFIG_CRACEN_KMU_PROTECTED_RAM */
 		for (size_t i = 0; i < key->number_of_slots; i++) {
 			if (lib_kmu_push_slot(key->slot_id + i) != 0) {
 				return SX_ERR_UNKNOWN_ERROR;
@@ -326,6 +328,7 @@ int cracen_kmu_prepare_key(const uint8_t *user_data)
 	return SX_OK;
 }
 
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 psa_status_t cracen_push_prot_ram_inv_slots(void)
 {
 	bool any_slot_empty;
@@ -346,16 +349,21 @@ psa_status_t cracen_push_prot_ram_inv_slots(void)
 
 	return PSA_SUCCESS;
 }
+#endif /* CONFIG_CRACEN_KMU_PROTECTED_RAM */
 
 int cracen_kmu_clean_key(const uint8_t *user_data)
 {
 	const kmu_opaque_key_buffer *key = (const kmu_opaque_key_buffer *)user_data;
 
+	ARG_UNUSED(key);
+
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 	if (key->key_usage_scheme == CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED) {
 		if (cracen_push_prot_ram_inv_slots() != PSA_SUCCESS) {
 			return SX_ERR_UNKNOWN_ERROR;
 		}
 	}
+#endif /* CONFIG_CRACEN_KMU_PROTECTED_RAM */
 
 	safe_memzero(kmu_push_area, sizeof(kmu_push_area));
 
@@ -793,6 +801,7 @@ static psa_status_t convert_to_psa_attributes(kmu_metadata *metadata,
 		return PSA_ERROR_DATA_INVALID;
 	}
 
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 	if (metadata->key_usage_scheme == CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED) {
 		/* Only AES keys are supported. */
 		if (psa_get_key_type(key_attr) != PSA_KEY_TYPE_AES) {
@@ -807,6 +816,7 @@ static psa_status_t convert_to_psa_attributes(kmu_metadata *metadata,
 			return PSA_ERROR_CORRUPTION_DETECTED;
 		}
 	}
+#endif
 
 	return PSA_SUCCESS;
 }
@@ -825,6 +835,9 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 
 	switch (metadata->key_usage_scheme) {
 	case CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED:
+#if !defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
+		return PSA_ERROR_NOT_SUPPORTED;
+#endif
 	case CRACEN_KMU_KEY_USAGE_SCHEME_SEED:
 	case CRACEN_KMU_KEY_USAGE_SCHEME_ENCRYPTED:
 	case CRACEN_KMU_KEY_USAGE_SCHEME_RAW:
@@ -833,6 +846,7 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 		return PSA_ERROR_INVALID_ARGUMENT;
 	}
 
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 	if (metadata->key_usage_scheme == CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED) {
 		if (psa_get_key_usage_flags(key_attr) & PSA_KEY_USAGE_EXPORT) {
 			return PSA_ERROR_INVALID_ARGUMENT;
@@ -841,6 +855,7 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 			return PSA_ERROR_INVALID_ARGUMENT;
 		}
 	}
+#endif
 
 	if (metadata->key_usage_scheme == CRACEN_KMU_KEY_USAGE_SCHEME_SEED) {
 		metadata->rpolicy = LIB_KMU_REV_POLICY_LOCKED;
@@ -1009,6 +1024,7 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 		break;
 #endif /* PSA_NEED_CRACEN_ECDH */
 	default:
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 		/* Ignore the algorithm for the protected ram invalidation kmu slot because
 		 * it will never be used for crypto operations.
 		 */
@@ -1017,6 +1033,9 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 		if (kmu_slot != PROTECTED_RAM_INVALIDATION_DATA_SLOT1) {
 			return PSA_ERROR_NOT_SUPPORTED;
 		}
+#else
+		return PSA_ERROR_NOT_SUPPORTED;
+#endif
 	}
 
 	psa_key_usage_t resulting_usage = 0;
@@ -1055,6 +1074,7 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 	metadata->key_usage_scheme = CRACEN_PSA_GET_KEY_USAGE_SCHEME(
 		MBEDTLS_SVC_KEY_ID_GET_KEY_ID(psa_get_key_id(key_attr)));
 
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 	if (metadata->key_usage_scheme == CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED) {
 		if (psa_get_key_usage_flags(key_attr) & PSA_KEY_USAGE_EXPORT) {
 			return PSA_ERROR_INVALID_ARGUMENT;
@@ -1063,6 +1083,7 @@ static psa_status_t convert_from_psa_attributes(const psa_key_attributes_t *key_
 			return PSA_ERROR_INVALID_ARGUMENT;
 		}
 	}
+#endif
 
 	switch (PSA_KEY_LIFETIME_GET_PERSISTENCE(psa_get_key_lifetime(key_attr))) {
 	case PSA_KEY_PERSISTENCE_READ_ONLY:
@@ -1109,6 +1130,7 @@ psa_status_t cracen_kmu_provision(const psa_key_attributes_t *key_attr, int slot
 	}
 
 	switch (metadata.key_usage_scheme) {
+#if defined(CONFIG_CRACEN_KMU_PROTECTED_RAM)
 	case CRACEN_KMU_KEY_USAGE_SCHEME_PROTECTED:
 		/* Only AES keys are supported. */
 		if (psa_get_key_type(key_attr) != PSA_KEY_TYPE_AES) {
@@ -1122,6 +1144,7 @@ psa_status_t cracen_kmu_provision(const psa_key_attributes_t *key_attr, int slot
 			return PSA_ERROR_INVALID_ARGUMENT;
 		}
 		break;
+#endif /* CONFIG_CRACEN_KMU_PROTECTED_RAM */
 #ifdef PSA_NEED_CRACEN_KMU_ENCRYPTED_KEYS
 	case CRACEN_KMU_KEY_USAGE_SCHEME_ENCRYPTED:
 		if (key_buffer_size > CRACEN_KMU_PUSH_AREA_SIZE) {
